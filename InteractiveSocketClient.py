@@ -59,14 +59,14 @@ class OrderSocket_io(socketio.Client):
 
         """Get root url from config file"""
         currDirMain = os.getcwd()
-        configParser = configparser.RawConfigParser()
+        configParser = configparser.ConfigParser()
         configFilePath = os.path.join(currDirMain, 'config.ini')
         configParser.read(configFilePath)
         self.port = configParser.get('root_url', 'root').strip()
 
         port = f'{self.port}/?token='
 
-        self.connection_url = port + self.token + '&userID=' + self.userID + "&apiType=INTERACTIVE"
+        self.connection_url = self.port + self.token + '&userID=' + self.userID + "&apiType=INTERACTIVE"
 
     def connect(self, headers={}, transports='websocket', namespaces=None, socketio_path='/interactive/socket.io',
                 verify=False):
@@ -95,7 +95,7 @@ class OrderSocket_io(socketio.Client):
         self.sid.connect(url, headers, transports, namespaces, socketio_path)
         self.sid.wait()
         """Disconnect from the socket."""
-        # self.sid.disconnect()
+        self.sid.disconnect()
 
     def on_connect(self):
         """Connect from the socket"""

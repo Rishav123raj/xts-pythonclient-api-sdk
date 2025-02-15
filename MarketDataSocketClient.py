@@ -40,8 +40,7 @@ class MDSocket_io(socketio.Client):
     """
 
     def __init__(self, token, userID, reconnection=True, reconnection_attempts=0, reconnection_delay=1,
-                 reconnection_delay_max=50000, randomization_factor=0.5, logger=False, binary=False, json=None,
-                 **kwargs):
+                 reconnection_delay_max=50000, randomization_factor=0.5, logger=False, binary=False, json=None):
         self.sid = socketio.Client(logger=True, engineio_logger=True)
         self.eventlistener = self.sid
 
@@ -71,21 +70,22 @@ class MDSocket_io(socketio.Client):
 
         self.sid.on('disconnect', self.on_disconnect)
 
+        self.userID = userID
+        self.token = token
+        
         """Get the root url from config file"""
         currDirMain = os.getcwd()
         configParser = configparser.ConfigParser()
         configFilePath = os.path.join(currDirMain, 'config.ini')
         configParser.read(configFilePath)
 
-        self.port = configParser.get('root_url', 'root')
-        self.userID = userID
+        self.port = configParser.get('root_url', 'root')E 
         publishFormat = 'JSON'
         self.broadcastMode = configParser.get('root_url', 'broadcastMode')
-        self.token = token
 
         port = f'{self.port}/?token='
 
-        self.connection_url = port + token + '&userID=' + self.userID + '&publishFormat=' + publishFormat + '&broadcastMode=' + self.broadcastMode
+        self.connection_url = self.port + self.token + '&userID=' + self.userID + '&publishFormat=' + publishFormat + '&broadcastMode=' + self.broadcastMode
 
     def connect(self, headers={}, transports='websocket', namespaces=None, socketio_path='/apimarketdata/socket.io',
                 verify=False):
@@ -106,21 +106,19 @@ class MDSocket_io(socketio.Client):
         :param socketio_path: The endpoint where the Socket.IO server is
                               installed. The default value is appropriate for
                               most cases.
-
-        self.url = self.connection_url
+        """
         self.connection_headers = headers
         self.connection_transports = transports
         self.connection_namespaces = namespaces
         self.socketio_path = socketio_path
         
-        Connect to the socket.
-        """
+        # Connect to the socket.
         url = self.connection_url
         """Connected to the socket."""
         self.sid.connect(url, headers, transports, namespaces, socketio_path)
         self.sid.wait()
         """Disconnected from the socket."""
-        # self.sid.disconnect()
+        self.sid.disconnect()
 
     def on_connect(self):
         """Connect from the socket."""
@@ -128,61 +126,61 @@ class MDSocket_io(socketio.Client):
 
     def on_message(self, data):
         """On receiving message"""
-        print('I received a message!' + data)
+        print(f'I received a message! {data}')
 
     def on_message1502_json_full(self, data):
         """On receiving message code 1502 full"""
-        print('I received a 1502 Market depth message!' + data)
+        print(f'I received a 1502 Market depth message! {data}')
 
    def on_message1507_json_full(self, data):
         """On receiving message code 1507 full"""
-        print('I received a 1507 MarketStatus message!' + data)
+        print(f'I received a 1507 MarketStatus message! {data}')
         
    def on_message1512_json_full(self, data):
         """On receiving message code 1512 full"""
-        print('I received a 1512 LTP message!' + data)     
+        print(f'I received a 1512 LTP message! {data}')     
 
     def on_message1505_json_full(self, data):
         """On receiving message code 1505 full"""
-        print('I received a 1505 Candle data message!' + data)
+        print(f'I received a 1505 Candle data message! {data}')
 
     def on_message1510_json_full(self, data):
         """On receiving message code 1510 full"""
-        print('I received a 1510 Open interest message!' + data)
+        print(f'I received a 1510 Open interest message! {data}')
 
     def on_message1501_json_full(self, data):
         """On receiving message code 1501 full"""
-        print('I received a 1501 Level1,Touchline message!' + data)
+        print(f'I received a 1501 Level1,Touchline message! {data}')
 
     def on_message1502_json_partial(self, data):
         """On receiving message code 1502 partial"""
-        print('I received a 1502 partial message!' + data)
+        print(f'I received a 1502 partial message! {data}')
     
     def on_message1512_json_partial(self, data):
         """On receiving message code 1512 partial"""
-        print('I received a 1512 LTP message!' + data)
+        print(f'I received a 1512 LTP message! {data}')
 
     def on_message1505_json_partial(self, data):
         """On receiving message code 1505 partial"""
-        print('I received a 1505 Candle data message!' + data)
+        print(f'I received a 1505 Candle data message! {data}')
 
     def on_message1510_json_partial(self, data):
         """On receiving message code 1510 partial"""
-        print('I received a 1510 Open interest message!' + data)
+        print(f'I received a 1510 Open interest message! {data}')
 
     def on_message1501_json_partial(self, data):
         """On receiving message code 1501 partial"""
         now = datetime.now()
         today = now.strftime("%H:%M:%S")
-        print(today, 'in main 1501 partial Level1,Touchline message!' + data + ' \n')
+        print(today, f'in main 1501 partial Level1,Touchline message! + {data}' + ' \n')
 
     def on_message1105_json_partial(self, data):
         """On receiving message code 1105 partial"""
         now = datetime.now()
         today = now.strftime("%H:%M:%S")
-        print(today, 'in main 1105 partial, Instrument Property Change Event!' + data + ' \n')
+        print(today, f'in main 1105 partial, Instrument Property Change Event! {data}' + ' \n')
 
-        print('I received a 1105 Instrument Property Change Event!' + data)
+        print(f'I received a 1105 Instrument Property Change Event! {data}')
 
     def on_disconnect(self):
         """Disconnected from the socket"""
@@ -190,7 +188,7 @@ class MDSocket_io(socketio.Client):
 
     def on_error(self, data):
         """Error from the socket"""
-        print('Market Data Error', data)
+        print(f'Market Data Error {data}')
 
     def get_emitter(self):
         """For getting the event listener"""
