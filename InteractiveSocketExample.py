@@ -34,37 +34,37 @@ def on_message():
 
 # Callback for joined event
 def on_joined(data):
-    print('Interactive socket joined successfully!' + data)
+    print(f'Interactive socket joined successfully! {data}')
 
 
 # Callback for error
 def on_error(data):
-    print('Interactive socket error!' + data)
+    print(f'Interactive socket error! {data}')
 
 
 # Callback for order
 def on_order(data):
-    print("Order placed!" + data)
+    print(f'Order placed! {data}')
 
 
 # Callback for trade
 def on_trade(data):
-    print("Trade Received!" + data)
+    print(f 'Trade Received! {data}')
 
 
 # Callback for position
 def on_position(data):
-    print("Position Retrieved!" + data)
+    print(f'Position Retrieved! {data}')
 
 
 # Callback for trade conversion event
 def on_tradeconversion(data):
-    print("Trade Conversion Received!" + data)
+    print(f'Trade Conversion Received! {data}')
 
 
 # Callback for message logout
 def on_messagelogout(data):
-    print("User logged out!" + data)
+    print(f'User logged out! {data}')
 
 
 # Callback for disconnection
@@ -83,14 +83,6 @@ soc.on_position = on_position
 soc.on_tradeconversion = on_tradeconversion
 soc.on_messagelogout = on_messagelogout
 soc.on_disconnect = on_disconnect
-
-# Event listener
-el = soc.get_emitter()
-el.on('connect', on_connect)
-el.on('order', on_order)
-el.on('trade', on_trade)
-el.on('position', on_position)
-el.on('tradeConversion', on_tradeconversion)
 
 # Infinite loop on the main thread. Nothing after this will run.
 # You have to use the pre-defined callbacks to manage subscriptions.
