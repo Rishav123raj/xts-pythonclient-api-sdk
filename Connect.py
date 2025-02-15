@@ -13,8 +13,6 @@ import logging
 import requests
 from six.moves.urllib.parse import urljoin
 
-import Exception as ex
-
 log = logging.getLogger(__name__)
 
 
