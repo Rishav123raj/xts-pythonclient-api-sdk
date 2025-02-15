@@ -2,7 +2,7 @@ import requests
 import json
 from requests import exceptions
 from requests.exceptions import HTTPError
-from requests import ConnectTimeout, HTTPError, Timeout, ConnectionError
+from requests import ConnectTimeout, Timeout, ConnectionError
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
                 Here we have declared all the exception and responses
@@ -21,7 +21,7 @@ class XTSException(Exception):
 
     def __init__(self, message, code=500):
         """Initialize the exception."""
-        super(XTSException, self).__init__(message)
+        super(XTSException, self).__init__(message, code)
         self.code = code
 
 
