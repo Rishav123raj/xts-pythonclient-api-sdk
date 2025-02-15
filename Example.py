@@ -112,7 +112,7 @@ if response['type'] != 'error':
     OrderID = response['result']['AppOrderID']
     
 """Cancel BracketOrder Request"""
-res = self.xt_.bracketorder_cancel(appOrderId)
+res = xt.bracketorder_cancel(appOrderId)
 print("Bracket Cancel: ", response)
 
     
@@ -295,7 +295,7 @@ response = xt.get_future_symbol(
     exchangeSegment=2,
     series='FUTIDX',
     symbol='NIFTY',
-    expiryDate='28MAY25JUN')
+    expiryDate='28MAY25')
 print('Future Symbol:', str(response))
 
 """Get Option Symbol Request"""
